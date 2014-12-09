@@ -2,6 +2,7 @@
   "name": "client",
   "ns": "router",
   "description": "Client Side Router, to simplify usage outputs an object keyed by route",
+  "async": true,
   "dependencies": {
     "npm": {
       "router-lib": "0.x.x"
@@ -14,7 +15,8 @@
     "input": {
       "routes": {
         "title": "Routes",
-        "type": "array"
+        "type": "array",
+        "async": true
       }
     },
     "output": {

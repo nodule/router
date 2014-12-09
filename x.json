@@ -12,7 +12,8 @@
         "input": {
           "routes": {
             "title": "Routes",
-            "type": "array"
+            "type": "array",
+            "async": true
           }
         },
         "output": {
@@ -31,10 +32,11 @@
           "router-lib": "0.x.x"
         }
       },
+      "async": true,
       "description": "Client Side Router, to simplify usage outputs an object keyed by route",
       "ns": "router",
       "name": "client",
-      "fn": "output = function() {\n  var router = router_lib.router;\n  router.setMatchedPaths(input.routes);\n  router.setOnChangeHandler(function(uri, route) {\n    if (route) {\n      var ret = {out: {}};\n      ret.out[route.path] = route;\n      cb(ret);\n    } else {\n      cb({ error: new Error('URI was not matched') });\n    }\n  });\n};\n"
+      "fn": "on.input.routes = function(data) {\n  var router = router_lib.router;\n  router.setMatchedPaths(data);\n  router.setOnChangeHandler(function(uri, route) {\n    if (route) {\n      var ret = {out: {}};\n      ret.out[route.path] = route;\n      output(ret);\n    } else {\n      output({ error: new Error('URI was not matched') });\n    }\n  });\n};\n"
     }
   ],
   "twigs": []
