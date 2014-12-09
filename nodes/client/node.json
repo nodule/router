@@ -1,0 +1,28 @@
+{
+  "name": "client",
+  "ns": "router",
+  "description": "Client Side Router, to simplify usage outputs an object keyed by route",
+  "dependencies": {
+    "npm": {
+      "router-lib": "0.x.x"
+    }
+  },
+  "phrases": {
+    "active": "Routing"
+  },
+  "ports": {
+    "input": {
+      "routes": {
+        "title": "Routes",
+        "type": "array"
+      }
+    },
+    "output": {
+      "out": {
+        "title": "Route",
+        "type": "object",
+        "additionalProperties": true
+      }
+    }
+  }
+}

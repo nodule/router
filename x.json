@@ -1,0 +1,41 @@
+{
+  "name": "router",
+  "description": "Router for Chiχ",
+  "version": "0.0.2",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nodule/router.git"
+  },
+  "nodes": [
+    {
+      "ports": {
+        "input": {
+          "routes": {
+            "title": "Routes",
+            "type": "array"
+          }
+        },
+        "output": {
+          "out": {
+            "title": "Route",
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "phrases": {
+        "active": "Routing"
+      },
+      "dependencies": {
+        "npm": {
+          "router-lib": "0.x.x"
+        }
+      },
+      "description": "Client Side Router, to simplify usage outputs an object keyed by route",
+      "ns": "router",
+      "name": "client",
+      "fn": "output = function() {\n  var router = router_lib.router;\n  router.setMatchedPaths(input.routes);\n  router.setOnChangeHandler(function(uri, route) {\n    if (route) {\n      var ret = {out: {}};\n      ret.out[route.path] = route;\n      cb(ret);\n    } else {\n      cb({ error: new Error('URI was not matched') });\n    }\n  });\n};\n"
+    }
+  ],
+  "twigs": []
+}
