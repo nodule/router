@@ -13,8 +13,23 @@ Log(console/log)
 [
   "/one",
   "/two",
-  "/trees",
-  "/tree/:id"
+  "/tree/:id",
+  "/trees"
 ] -> routes Router
+
+'Got one!' -> @msg One(console/log)
+'Got two!' -> @msg Two(console/log)
+'Got trees!' -> @msg Trees(console/log)
+
+# probably fails to match /, I think it just should.
+# ok they all match, which is bad... :-)
+# so a nice bug, which needs to be fixed.
+# seems like it's caused by the slash.
+# ok, fbpx just does not recognize this as an index.
+# index is allowed to be any string.
+Router out [/one]       -> :start One
+Router out [/two]       -> :start Two
+Router out [/tree/:id] -> :start Trees
+Router out [/trees]     -> :start Trees
 
 Router out -> msg Log

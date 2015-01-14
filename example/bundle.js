@@ -14488,228 +14488,6 @@ module.exports={
 }
 
 },{}],55:[function(require,module,exports){
-'use strict';
-
-/**
- *
- * Ok, this should be a general listener interface.
- *
- * One who will use it is the Actor.
- * But I want to be able to do the same for e.g. Loader.
- *
- * They will all be in chix-monitor-*
- *
- * npmlog =  Listener(instance, options);
- *
- * The return is just in case you want to do other stuff.
- *
- * e.g. fbpx wants to add this to npmlog:
- *
- * Logger.level = program.verbose ? 'verbose' : program.debug;
- *
- */
-// function NpmLogActorMonitor(actor, opts) {
-module.exports = function NpmLogActorMonitor(Logger, actor) {
-
-   // TODO: just make an NpmLogIOMonitor.
-   var ioHandler = actor.ioHandler;
-
-   actor.on('removeLink', function(event) {
-     Logger.debug(
-       event.node ? event.node.identifier : 'Some Actor',
-       'removed link'
-     );
-   });
-
-   // Ok emiting each and every output I don't like for the IOHandler.
-   // but whatever can change it later.
-   ioHandler.on('output', function(data) {
-
-     // I don't like this data.out.port thing vs data.port
-     switch(data.port) {
-
-        case ':plug':
-         Logger.debug(
-           data.node.identifier,
-           'port %s plugged (%d)',
-           data.out.read().port,
-           data.out.read().connections);
-        break;
-
-        case ':unplug':
-         Logger.debug(
-           data.node.identifier,
-           'port %s unplugged (%d)',
-           data.out.read().port,
-           data.out.read().connections);
-        break;
-
-        case ':portFill':
-         Logger.info(
-           data.node.identifier,
-           'port %s filled with data',
-           data.out.read().port);
-        break;
-
-        case ':contextUpdate':
-         Logger.info(
-           data.node.identifier,
-           'port %s filled with context',
-           data.out.read().port);
-        break;
-
-        case ':inputValidated':
-          Logger.debug(data.node.identifier, 'input validated');
-        break;
-
-        case ':start':
-          Logger.info(data.node.identifier, 'START');
-        break;
-
-        case ':freePort':
-          Logger.debug(data.node.identifier, 'free port %s', data.out.read().port);
-        break;
-
-/*
-       case ':queue':
-         Logger.debug(
-           data.node,
-           'queue: %s',
-           data.port
-         );
-       break;
-*/
-
-       case ':openPort':
-         Logger.info(
-           data.node.identifier,
-           'opened port %s (%d)',
-           data.out.read().port,
-           data.out.read().connections
-           );
-       break;
-
-       case ':closePort':
-         Logger.info(
-           data.node.identifier,
-           'closed port %s',
-           data.out.read().port
-           );
-       break;
-
-       case ':index':
-         Logger.info(
-           data.node.identifier,
-           '[%s] set on port `%s`',
-           data.out.read().index,
-           data.out.read().port
-           );
-       break;
-
-       case ':nodeComplete':
-         // console.log('nodeComplete', data);
-         Logger.info(data.node.identifier, 'completed');
-       break;
-
-       case ':portReject':
-         Logger.debug(
-           data.node.identifier,
-           'rejected input on port %s',
-           data.out.read().port
-         );
-       break;
-
-       case ':inputRequired':
-         Logger.error(
-           data.node.identifier,
-           'input required on port %s',
-           data.out.read().port);
-       break;
-
-       case ':error':
-         Logger.error(
-           data.node.identifier,
-           data.out.read().msg
-         );
-       break;
-
-       case ':nodeTimeout':
-         Logger.error(
-           data.node.identifier,
-           'node timeout'
-         );
-       break;
-
-       case ':executed':
-         Logger.info(
-           data.node.identifier,
-           'EXECUTED'
-         );
-       break;
-
-       case ':inputTimeout':
-         Logger.info(
-           data.node.identifier,
-           'input timeout, got %s need %s',
-           Object.keys(data.node.input).join(', '),
-           data.node.openPorts.join(', '));
-       break;
-
-       default:
-         // TODO: if the above misses a system port it will be reported
-         //       as default normal output.
-         Logger.info(data.node.identifier, 'output on port %s', data.port);
-       break;
-
-     }
-
-   });
-
-   return Logger;
-
-};
-
-},{}],56:[function(require,module,exports){
-'use strict';
-
-/**
- *
- * NpmLog monitor for the Loader
- *
- */
-module.exports = function NpmLogLoaderMonitor(Logger, loader) {
-
-  loader.on('loadUrl', function(data) {
-    Logger.info( 'loadUrl', data.url);
-  });
-
-  loader.on('loadFile', function(data) {
-    Logger.info( 'loadFile', data.path);
-  });
-
-  loader.on('loadCache', function(data) {
-    Logger.debug( 'cache', 'loaded cache file %s', data.file);
-  });
-
-  loader.on('purgeCache', function(data) {
-    Logger.debug( 'cache', 'purged cache file %s', data.file);
-  });
-
-  loader.on('writeCache', function(data) {
-    Logger.debug( 'cache', 'wrote cache file %s', data.file);
-  });
-
-  return Logger;
-
-};
-
-},{}],"chix-monitor-npmlog":[function(require,module,exports){
-module.exports=require('HNG52E');
-},{}],"HNG52E":[function(require,module,exports){
-exports.Actor = require('./lib/actor');
-exports.Loader = require('./lib/loader');
-
-},{"./lib/actor":55,"./lib/loader":56}],59:[function(require,module,exports){
 "use strict";
 /*globals Handlebars: true */
 var Handlebars = require("./handlebars.runtime")["default"];
@@ -14749,7 +14527,7 @@ Handlebars.create = create;
 Handlebars['default'] = Handlebars;
 
 exports["default"] = Handlebars;
-},{"./handlebars.runtime":60,"./handlebars/compiler/ast":62,"./handlebars/compiler/base":63,"./handlebars/compiler/compiler":64,"./handlebars/compiler/javascript-compiler":66}],60:[function(require,module,exports){
+},{"./handlebars.runtime":56,"./handlebars/compiler/ast":58,"./handlebars/compiler/base":59,"./handlebars/compiler/compiler":60,"./handlebars/compiler/javascript-compiler":62}],56:[function(require,module,exports){
 "use strict";
 /*globals Handlebars: true */
 var base = require("./handlebars/base");
@@ -14785,7 +14563,7 @@ Handlebars.create = create;
 Handlebars['default'] = Handlebars;
 
 exports["default"] = Handlebars;
-},{"./handlebars/base":61,"./handlebars/exception":70,"./handlebars/runtime":71,"./handlebars/safe-string":72,"./handlebars/utils":73}],61:[function(require,module,exports){
+},{"./handlebars/base":57,"./handlebars/exception":66,"./handlebars/runtime":67,"./handlebars/safe-string":68,"./handlebars/utils":69}],57:[function(require,module,exports){
 "use strict";
 var Utils = require("./utils");
 var Exception = require("./exception")["default"];
@@ -15017,7 +14795,7 @@ var createFrame = function(object) {
   return frame;
 };
 exports.createFrame = createFrame;
-},{"./exception":70,"./utils":73}],62:[function(require,module,exports){
+},{"./exception":66,"./utils":69}],58:[function(require,module,exports){
 "use strict";
 var Exception = require("../exception")["default"];
 
@@ -15232,7 +15010,7 @@ var AST = {
 // Must be exported as an object rather than the root of the module as the jison lexer
 // most modify the object to operate properly.
 exports["default"] = AST;
-},{"../exception":70}],63:[function(require,module,exports){
+},{"../exception":66}],59:[function(require,module,exports){
 "use strict";
 var parser = require("./parser")["default"];
 var AST = require("./ast")["default"];
@@ -15254,7 +15032,7 @@ function parse(input) {
 }
 
 exports.parse = parse;
-},{"../utils":73,"./ast":62,"./helpers":65,"./parser":67}],64:[function(require,module,exports){
+},{"../utils":69,"./ast":58,"./helpers":61,"./parser":63}],60:[function(require,module,exports){
 "use strict";
 var Exception = require("../exception")["default"];
 var isArray = require("../utils").isArray;
@@ -15707,7 +15485,7 @@ exports.compile = compile;function argEquals(a, b) {
     return true;
   }
 }
-},{"../exception":70,"../utils":73}],65:[function(require,module,exports){
+},{"../exception":66,"../utils":69}],61:[function(require,module,exports){
 "use strict";
 var Exception = require("../exception")["default"];
 
@@ -15895,7 +15673,7 @@ function omitLeft(statements, i, multiple) {
   current.leftStripped = current.string !== original;
   return current.leftStripped;
 }
-},{"../exception":70}],66:[function(require,module,exports){
+},{"../exception":66}],62:[function(require,module,exports){
 "use strict";
 var COMPILER_REVISION = require("../base").COMPILER_REVISION;
 var REVISION_CHANGES = require("../base").REVISION_CHANGES;
@@ -16860,7 +16638,7 @@ JavaScriptCompiler.isValidJavaScriptVariableName = function(name) {
 };
 
 exports["default"] = JavaScriptCompiler;
-},{"../base":61,"../exception":70}],67:[function(require,module,exports){
+},{"../base":57,"../exception":66}],63:[function(require,module,exports){
 "use strict";
 /* jshint ignore:start */
 /* istanbul ignore next */
@@ -17361,7 +17139,7 @@ function Parser () { this.yy = {}; }Parser.prototype = parser;parser.Parser = Pa
 return new Parser;
 })();exports["default"] = handlebars;
 /* jshint ignore:end */
-},{}],68:[function(require,module,exports){
+},{}],64:[function(require,module,exports){
 "use strict";
 var Visitor = require("./visitor")["default"];
 
@@ -17503,7 +17281,7 @@ PrintVisitor.prototype.content = function(content) {
 PrintVisitor.prototype.comment = function(comment) {
   return this.pad("{{! '" + comment.comment + "' }}");
 };
-},{"./visitor":69}],69:[function(require,module,exports){
+},{"./visitor":65}],65:[function(require,module,exports){
 "use strict";
 function Visitor() {}
 
@@ -17516,7 +17294,7 @@ Visitor.prototype = {
 };
 
 exports["default"] = Visitor;
-},{}],70:[function(require,module,exports){
+},{}],66:[function(require,module,exports){
 "use strict";
 
 var errorProps = ['description', 'fileName', 'lineNumber', 'message', 'name', 'number', 'stack'];
@@ -17545,7 +17323,7 @@ function Exception(message, node) {
 Exception.prototype = new Error();
 
 exports["default"] = Exception;
-},{}],71:[function(require,module,exports){
+},{}],67:[function(require,module,exports){
 "use strict";
 var Utils = require("./utils");
 var Exception = require("./exception")["default"];
@@ -17739,7 +17517,7 @@ exports.noop = noop;function initData(context, data) {
   }
   return data;
 }
-},{"./base":61,"./exception":70,"./utils":73}],72:[function(require,module,exports){
+},{"./base":57,"./exception":66,"./utils":69}],68:[function(require,module,exports){
 "use strict";
 // Build out our basic SafeString type
 function SafeString(string) {
@@ -17751,7 +17529,7 @@ SafeString.prototype.toString = function() {
 };
 
 exports["default"] = SafeString;
-},{}],73:[function(require,module,exports){
+},{}],69:[function(require,module,exports){
 "use strict";
 /*jshint -W004 */
 var SafeString = require("./safe-string")["default"];
@@ -17840,7 +17618,7 @@ exports.isEmpty = isEmpty;function appendContextPath(contextPath, id) {
 }
 
 exports.appendContextPath = appendContextPath;
-},{"./safe-string":72}],"handlebars":[function(require,module,exports){
+},{"./safe-string":68}],"handlebars":[function(require,module,exports){
 module.exports=require('7MzhPZ');
 },{}],"7MzhPZ":[function(require,module,exports){
 // USAGE:
@@ -17870,7 +17648,7 @@ if (typeof require !== 'undefined' && require.extensions) {
   require.extensions[".hbs"] = extension;
 }
 
-},{"../dist/cjs/handlebars":59,"../dist/cjs/handlebars/compiler/printer":68,"../dist/cjs/handlebars/compiler/visitor":69,"fs":1}],"router-lib":[function(require,module,exports){
+},{"../dist/cjs/handlebars":55,"../dist/cjs/handlebars/compiler/printer":64,"../dist/cjs/handlebars/compiler/visitor":65,"fs":1}],"router-lib":[function(require,module,exports){
 module.exports=require('ifsK7d');
 },{}],"ifsK7d":[function(require,module,exports){
 module.exports = {
@@ -17883,7 +17661,7 @@ module.exports = {
   Query: require('./lib/Query')
 };
 
-},{"./lib/Matcher":78,"./lib/Params":79,"./lib/Query":80,"./lib/Route":81,"./lib/browser":82,"./lib/helpers":83,"./router":87}],78:[function(require,module,exports){
+},{"./lib/Matcher":74,"./lib/Params":75,"./lib/Query":76,"./lib/Route":77,"./lib/browser":78,"./lib/helpers":79,"./router":83}],74:[function(require,module,exports){
 var regexpFromPath = require('path-to-regexp');
 var helpers = require('./helpers');
 
@@ -17930,7 +17708,7 @@ Matcher.matchWithPath = function(matchers, path) {
 
 module.exports = Matcher;
 
-},{"./helpers":83,"path-to-regexp":85}],79:[function(require,module,exports){
+},{"./helpers":79,"path-to-regexp":81}],75:[function(require,module,exports){
 var helpers = require('./helpers');
 var browser = require('./browser');
 
@@ -17963,7 +17741,7 @@ Params.fromMatchedPattern = function(matcher, pattern) {
 
 module.exports = Params;
 
-},{"./browser":82,"./helpers":83}],80:[function(require,module,exports){
+},{"./browser":78,"./helpers":79}],76:[function(require,module,exports){
 var qs = require('qs');
 
 var Query = {};
@@ -17997,7 +17775,7 @@ Query._queryStringFromUri = function(uri) {
 
 module.exports = Query;
 
-},{"qs":86}],81:[function(require,module,exports){
+},{"qs":82}],77:[function(require,module,exports){
 var Params = require('./Params');
 var Query = require('./Query');
 
@@ -18041,7 +17819,7 @@ Route.fromMatchedUri = function(matcher, uri) {
 
 module.exports = Route;
 
-},{"./Params":79,"./Query":80}],82:[function(require,module,exports){
+},{"./Params":75,"./Query":76}],78:[function(require,module,exports){
 var helpers = require('./helpers');
 
 var browser = {};
@@ -18072,7 +17850,7 @@ browser.getCurrentUri = function () {
 
 module.exports = browser;
 
-},{"./helpers":83}],83:[function(require,module,exports){
+},{"./helpers":79}],79:[function(require,module,exports){
 var fn = require('fn.js');
 
 var helpers = {};
@@ -18098,7 +17876,7 @@ helpers.properties = fn.properties;
 
 module.exports = helpers;
 
-},{"fn.js":84}],84:[function(require,module,exports){
+},{"fn.js":80}],80:[function(require,module,exports){
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
 		define(factory);
@@ -18369,7 +18147,7 @@ fn.debounce = function (handler, msDelay) {
 
 return fn;
 }));
-},{}],85:[function(require,module,exports){
+},{}],81:[function(require,module,exports){
 /**
  * Expose `pathtoRegexp`.
  */
@@ -18538,7 +18316,7 @@ function pathtoRegexp (path, keys, options) {
   return attachKeys(new RegExp('^' + path + (end ? '$' : ''), flags), keys);
 };
 
-},{}],86:[function(require,module,exports){
+},{}],82:[function(require,module,exports){
 /**
  * Object#toString() ref for stringify().
  */
@@ -18906,7 +18684,7 @@ function decode(str) {
   }
 }
 
-},{}],87:[function(require,module,exports){
+},{}],83:[function(require,module,exports){
 var browser = require('./lib/browser');
 var Route = require('./lib/Route');
 var Matcher = require('./lib/Matcher');
@@ -18999,15 +18777,13 @@ var router = {
 
 module.exports = router;
 
-},{"./lib/Matcher":78,"./lib/Query":80,"./lib/Route":81,"./lib/browser":82}],"example":[function(require,module,exports){
-module.exports=require('Gnmk1g');
-},{}],"Gnmk1g":[function(require,module,exports){
+},{"./lib/Matcher":74,"./lib/Query":76,"./lib/Route":77,"./lib/browser":78}],"Gnmk1g":[function(require,module,exports){
 var Loader = function() {
 
   // will be replaced with the json.
   this.dependencies = {"npm":{"router-lib":"0.x.x","handlebars":"latest"}};
   //this.nodes = ;
-  this.nodeDefinitions = {"https://serve-chix.rhcloud.com/nodes/{ns}/{name}":{"router":{"client":{"_id":"54876bdfab54be2e930fbd67","name":"client","ns":"router","description":"Client Side Router, to simplify usage outputs an object keyed by route","async":true,"dependencies":{"npm":{"router-lib":"0.x.x"}},"phrases":{"active":"Routing"},"ports":{"input":{"routes":{"title":"Routes","type":"array","async":true}},"output":{"out":{"title":"Route","type":"object","additionalProperties":true}}},"fn":"on.input.routes = function(data) {\n  var router = router_lib.router;\n  router.setMatchedPaths(data);\n  router.setOnChangeHandler(function(uri, route) {\n    if (route) {\n      var ret = {out: {}};\n      ret.out[route.path] = route;\n      output(ret);\n    } else {\n      output({ error: new Error('URI was not matched') });\n    }\n  });\n};\n","provider":"https://serve-chix.rhcloud.com/nodes/{ns}/{name}"}},"template":{"handlebars":{"_id":"52ea878d1905561c7aa3bdbc","name":"handlebars","ns":"template","description":"Handlebars Template engine","phrases":{"active":"Compiling handlebars template"},"ports":{"input":{"body":{"type":"string","format":"html","title":"Template body","description":"The body of the handlebars template","required":true},"vars":{"type":"object","title":"Input variables","description":"the input variables for this template","default":{}},"handlebars":{"type":"function","title":"Handlebars","default":null}},"output":{"out":{"title":"HTML","type":"string"}}},"dependencies":{"npm":{"handlebars":"latest"}},"fn":"var hb = input.handlebars || handlebars;\nvar tpl = hb.compile(input.body);\noutput = {\n  out: tpl(input.vars)\n}\n","provider":"https://serve-chix.rhcloud.com/nodes/{ns}/{name}"}},"console":{"log":{"_id":"52645993df5da0102500004e","name":"log","ns":"console","description":"Console log","async":true,"phrases":{"active":"Logging to console"},"ports":{"input":{"msg":{"type":"any","title":"Log message","description":"Logs a message to the console","async":true,"required":true}},"output":{"out":{"type":"any","title":"Log message"}}},"fn":"on.input.msg = function() {\n  console.log(data);\n  output( { out: data });\n}\n","provider":"https://serve-chix.rhcloud.com/nodes/{ns}/{name}"}}}};
+  this.nodeDefinitions = {"https://serve-chix.rhcloud.com/nodes/{ns}/{name}":{"router":{"client":{"_id":"54876bdfab54be2e930fbd67","name":"client","ns":"router","description":"Client Side Router, to simplify usage outputs an object keyed by route","async":true,"dependencies":{"npm":{"router-lib":"0.x.x"}},"phrases":{"active":"Routing"},"ports":{"input":{"routes":{"title":"Routes","type":"array","async":true}},"output":{"error":{"title":"Error","type":"Error"},"out":{"title":"Route","type":"object","additionalProperties":true}}},"fn":"state.router = null;\non.input.routes = function(data) {\n  state.router = null;\n  state.router = router_lib.router;\n  state.router.setMatchedPaths(data);\n  state.router.setOnChangeHandler(function(uri, route) {\n    if (route) {\n      var ret = {out: {}};\n      ret.out[route.path] = route;\n      output(ret);\n    } else {\n      output({ error: new Error('URI was not matched') });\n    }\n  });\n  state.router.start();\n};\n","provider":"https://serve-chix.rhcloud.com/nodes/{ns}/{name}"}},"template":{"handlebars":{"_id":"52ea878d1905561c7aa3bdbc","name":"handlebars","ns":"template","description":"Handlebars Template engine","phrases":{"active":"Compiling handlebars template"},"ports":{"input":{"body":{"type":"string","format":"html","title":"Template body","description":"The body of the handlebars template","required":true},"vars":{"type":"object","title":"Input variables","description":"the input variables for this template","default":{}},"handlebars":{"type":"function","title":"Handlebars","default":null}},"output":{"out":{"title":"HTML","type":"string"}}},"dependencies":{"npm":{"handlebars":"latest"}},"fn":"var hb = input.handlebars || handlebars;\nvar tpl = hb.compile(input.body);\noutput = {\n  out: tpl(input.vars)\n}\n","provider":"https://serve-chix.rhcloud.com/nodes/{ns}/{name}"}},"console":{"log":{"_id":"52645993df5da0102500004e","name":"log","ns":"console","description":"Console log","async":true,"phrases":{"active":"Logging to console"},"ports":{"input":{"msg":{"type":"any","title":"Log message","description":"Logs a message to the console","async":true,"required":true}},"output":{"out":{"type":"any","title":"Log message"}}},"fn":"on.input.msg = function() {\n  console.log(data);\n  output( { out: data });\n}\n","provider":"https://serve-chix.rhcloud.com/nodes/{ns}/{name}"}}}};
 
 };
 
@@ -19040,18 +18816,16 @@ Loader.prototype.getNodeDefinition = function(node, map) {
 var Flow = require('chix-flow').Flow;
 var loader = new Loader();
 
-var map = {"type":"flow","nodes":[{"id":"Router","title":"Router","ns":"router","name":"client"},{"id":"TabbedView","title":"TabbedView","ns":"template","name":"handlebars"},{"id":"Log","title":"Log","ns":"console","name":"log"}],"links":[{"source":{"id":"Router","port":"out"},"target":{"id":"Log","port":"msg"},"metadata":{"title":"Router out -> msg Log"}}],"title":"Router example","ns":"router","name":"example","id":"RouterExample","providers":{"@":{"url":"https://serve-chix.rhcloud.com/nodes/{ns}/{name}"}}};
+var map = {"type":"flow","nodes":[{"id":"Router","title":"Router","ns":"router","name":"client"},{"id":"TabbedView","title":"TabbedView","ns":"template","name":"handlebars"},{"id":"Log","title":"Log","ns":"console","name":"log"},{"id":"One","title":"One","ns":"console","name":"log","context":{"msg":"Got one!"}},{"id":"Two","title":"Two","ns":"console","name":"log","context":{"msg":"Got two!"}},{"id":"Trees","title":"Trees","ns":"console","name":"log","context":{"msg":"Got trees!"}}],"links":[{"source":{"id":"Router","port":"out","setting":{"index":"/one"}},"target":{"id":"One","port":":start"},"metadata":{"title":"Router out -> :start One"}},{"source":{"id":"Router","port":"out","setting":{"index":"/two"}},"target":{"id":"Two","port":":start"},"metadata":{"title":"Router out -> :start Two"}},{"source":{"id":"Router","port":"out","setting":{"index":"/tree/:id"}},"target":{"id":"Trees","port":":start"},"metadata":{"title":"Router out -> :start Trees"}},{"source":{"id":"Router","port":"out","setting":{"index":"/trees"}},"target":{"id":"Trees","port":":start"},"metadata":{"title":"Router out -> :start Trees"}},{"source":{"id":"Router","port":"out"},"target":{"id":"Log","port":"msg"},"metadata":{"title":"Router out -> msg Log"}}],"title":"Router example","ns":"router","name":"example","id":"RouterExample","providers":{"@":{"url":"https://serve-chix.rhcloud.com/nodes/{ns}/{name}"}}};
 
 var actor;
 window.Actor = actor = Flow.create(map, loader);
 
-var monitor = require('chix-monitor-npmlog').Actor;
-monitor(console, actor);
 
 function onDeviceReady() {
 actor.run();
 actor.push();
-actor.sendIIPs([{"source":{"id":"RouterExample","port":":iip"},"target":{"id":"Router","port":"routes"},"metadata":{"title":"Router example :iip -> routes Router"},"data":["/one","/two","/trees","/tree/:id"]}]);
+actor.sendIIPs([{"source":{"id":"RouterExample","port":":iip"},"target":{"id":"Router","port":"routes"},"metadata":{"title":"Router example :iip -> routes Router"},"data":["/one","/two","/tree/:id","/trees"]}]);
 
 };
 
@@ -19065,4 +18839,6 @@ if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry|IEMobile)/))
 // as long as this module is loaded.
 module.exports = actor;
 
-},{"chix-flow":"jXAsbI","chix-monitor-npmlog":"HNG52E"}]},{},["Gnmk1g"])
+},{"chix-flow":"jXAsbI"}],"example":[function(require,module,exports){
+module.exports=require('Gnmk1g');
+},{}]},{},["Gnmk1g"])
