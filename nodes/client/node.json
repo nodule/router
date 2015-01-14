@@ -20,6 +20,10 @@
       }
     },
     "output": {
+      "error": {
+        "title": "Error",
+        "type": "Error"
+      },
       "out": {
         "title": "Route",
         "type": "object",

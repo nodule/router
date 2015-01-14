@@ -16,10 +16,15 @@
     "test": "chit -r"
   },
   "devDependencies": {
-    "chit": "0.x.x"
+    "chit": "0.x.x",
+    "chix-flow": "^0.12.0",
+    "chix-monitor-npmlog": "0.0.5"
   },
   "chix": {
     "name": "router",
     "color": "rgb(136,0,35)"
+  },
+  "dependencies": {
+    "router-lib": "git://github.com/nicolashery/router-lib"
   }
 }

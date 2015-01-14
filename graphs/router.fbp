@@ -1,0 +1,20 @@
+title: Router example
+ns: router
+name: example
+id: RouterExample
+
+# TODO: remove that id requirement again.
+# has to do with chix-runtime needing an id.
+
+Router(router/client)
+TabbedView(template/handlebars)
+Log(console/log)
+
+[
+  "/one",
+  "/two",
+  "/trees",
+  "/tree/:id"
+] -> routes Router
+
+Router out -> msg Log

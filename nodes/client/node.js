@@ -1,7 +1,9 @@
+state.router = null;
 on.input.routes = function(data) {
-  var router = router_lib.router;
-  router.setMatchedPaths(data);
-  router.setOnChangeHandler(function(uri, route) {
+  state.router = null;
+  state.router = router_lib.router;
+  state.router.setMatchedPaths(data);
+  state.router.setOnChangeHandler(function(uri, route) {
     if (route) {
       var ret = {out: {}};
       ret.out[route.path] = route;
@@ -10,4 +12,5 @@ on.input.routes = function(data) {
       output({ error: new Error('URI was not matched') });
     }
   });
+  state.router.start();
 };

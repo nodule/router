@@ -6,6 +6,9 @@
     "type": "git",
     "url": "https://github.com/nodule/router.git"
   },
+  "dependencies": {
+    "router-lib": "git://github.com/nicolashery/router-lib"
+  },
   "nodes": [
     {
       "ports": {
@@ -17,6 +20,10 @@
           }
         },
         "output": {
+          "error": {
+            "title": "Error",
+            "type": "Error"
+          },
           "out": {
             "title": "Route",
             "type": "object",
@@ -36,7 +43,7 @@
       "description": "Client Side Router, to simplify usage outputs an object keyed by route",
       "ns": "router",
       "name": "client",
-      "fn": "on.input.routes = function(data) {\n  var router = router_lib.router;\n  router.setMatchedPaths(data);\n  router.setOnChangeHandler(function(uri, route) {\n    if (route) {\n      var ret = {out: {}};\n      ret.out[route.path] = route;\n      output(ret);\n    } else {\n      output({ error: new Error('URI was not matched') });\n    }\n  });\n};\n"
+      "fn": "state.router = null;\non.input.routes = function(data) {\n  state.router = null;\n  state.router = router_lib.router;\n  state.router.setMatchedPaths(data);\n  state.router.setOnChangeHandler(function(uri, route) {\n    if (route) {\n      var ret = {out: {}};\n      ret.out[route.path] = route;\n      output(ret);\n    } else {\n      output({ error: new Error('URI was not matched') });\n    }\n  });\n  state.router.start();\n};\n"
     }
   ],
   "twigs": []
