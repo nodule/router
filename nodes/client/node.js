@@ -6,10 +6,10 @@ on.input.routes = function() {
   state.router.setOnChangeHandler(function(uri, route) {
     if (route) {
       var ret = {out: {}};
-      ret.out[route.path] = route;
+      ret.out[route.path] = $.create(route);
       output(ret);
     } else {
-      output({ error: new Error('URI was not matched') });
+      output({ error: $.create(new Error('URI was not matched')) });
     }
   });
   state.router.start();
