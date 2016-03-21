@@ -2,7 +2,7 @@ state.router = null;
 on.input.routes = function() {
   state.router = null;
   state.router = router_lib.router;
-  state.router.setMatchedPaths(input.routes);
+  state.router.setMatchedPaths($.routes);
   state.router.setOnChangeHandler(function(uri, route) {
     if (route) {
       var ret = {out: {}};
