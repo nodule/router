@@ -17,7 +17,7 @@ module.exports = {
         title: "Routes",
         type: "array",
         async: true,
-        fn: function __ROUTES__(data, x, source, state, input, output, router_lib) {
+        fn: function __ROUTES__(data, source, state, input, $, output, router_lib) {
           var r = function() {
             state.router = null;
             state.router = router_lib.router;
