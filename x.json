@@ -11,6 +11,18 @@
   },
   "nodes": [
     {
+      "name": "client",
+      "ns": "router",
+      "description": "Client Side Router, to simplify usage outputs an object keyed by route",
+      "async": true,
+      "dependencies": {
+        "npm": {
+          "router-lib": "0.x.x"
+        }
+      },
+      "phrases": {
+        "active": "Routing"
+      },
       "ports": {
         "input": {
           "routes": {
@@ -31,20 +43,7 @@
           }
         }
       },
-      "phrases": {
-        "active": "Routing"
-      },
-      "dependencies": {
-        "npm": {
-          "router-lib": "0.x.x"
-        }
-      },
-      "async": true,
-      "description": "Client Side Router, to simplify usage outputs an object keyed by route",
-      "ns": "router",
-      "name": "client",
       "fn": "state.router = null;\non.input.routes = function() {\n  state.router = null;\n  state.router = router_lib.router;\n  state.router.setMatchedPaths($.routes);\n  state.router.setOnChangeHandler(function(uri, route) {\n    if (route) {\n      var ret = {out: {}};\n      ret.out[route.path] = $.create(route);\n      output(ret);\n    } else {\n      output({ error: $.create(new Error('URI was not matched')) });\n    }\n  });\n  state.router.start();\n};\n"
     }
-  ],
-  "twigs": []
+  ]
 }
